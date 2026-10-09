@@ -9,7 +9,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Main {
 
     private static final String ACCESS_KEY = "6146a1f1-cd8a-4b54-9ff6-84e528227f91";
-    private static final String REQUEST_URI = "https://api.weather.yandex.ru/v2/forecast?lat=57.1522&lon=65.5272";
+    private static final String REQUEST_URI = "https://api.weather.yandex.ru/v2/forecast?" +
+            "lat=57.1522&" +
+            "lon=65.5272&" +
+            "limit=2";
 
     public static void main(String[] args) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
@@ -42,7 +45,7 @@ public class Main {
 
         int temp = factNode.get("temp").asInt();
 
-        System.out.println(response.body());
+        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node));
         System.out.println(temp);
     }
 }
