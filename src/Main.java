@@ -32,9 +32,9 @@ public class Main {
 
         WeatherResponseHandler weatherResponseHandler = new WeatherResponseHandler(response, LIMIT);
 
-        System.out.printf("%s:\n%s\n", "Вывод полного ответа сервиса", weatherResponseHandler.getPrettyResponse());
+        System.out.printf("%s:\n%s\n\n", "Вывод полного ответа сервиса", weatherResponseHandler.getPrettyResponse());
 
-        System.out.printf("%s\n%d\n", "Вывод текущей температуры:", weatherResponseHandler.getCurrentTemp());
+        System.out.printf("%s:\n%d\n\n", "Вывод текущей температуры", weatherResponseHandler.getCurrentTemp());
 
         System.out.printf("%s (%d) дней:\n%.2f\n",
                 "Среднее арифметическое средних температур за",
