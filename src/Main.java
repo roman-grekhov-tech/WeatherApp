@@ -8,11 +8,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Main {
 
+    private static final int LIMIT = 3;
+
     private static final String ACCESS_KEY = "6146a1f1-cd8a-4b54-9ff6-84e528227f91";
     private static final String REQUEST_URI = "https://api.weather.yandex.ru/v2/forecast?" +
             "lat=57.1522&" +
             "lon=65.5272&" +
-            "limit=2";
+            "limit=" + LIMIT + "&" +
+            "extra=false&" +
+            "hours=false";
 
     public static void main(String[] args) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
