@@ -3,14 +3,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class Main {
 
+    // поддерживаются значения 1-7
     private static final int LIMIT = 3;
 
     private static final String ACCESS_KEY = "6146a1f1-cd8a-4b54-9ff6-84e528227f91";
+
+    // extra и hours не нужны для расчета средней температуры, поэтому они выключены
     private static final String REQUEST_URI = "https://api.weather.yandex.ru/v2/forecast?" +
             "lat=57.1522&" +
             "lon=65.5272&" +
@@ -28,31 +28,17 @@ public class Main {
                 .header("X-Yandex-Weather-Key", ACCESS_KEY)
                 .build();
 
-        HttpResponse<String> response = client.send(request,
-                HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        if (response.statusCode() != 200) {
-            throw new Exception("HTTP " + response.statusCode() + ": " + response.body());
-        }
+        WeatherResponseHandler weatherResponseHandler = new WeatherResponseHandler(response, LIMIT);
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(response.body());
+        System.out.printf("%s:\n%s\n", "Вывод полного ответа сервиса", weatherResponseHandler.getPrettyResponse());
 
-        JsonNode factNode = node.get("fact");
-        if (factNode == null || factNode.isNull()) {
-            throw new IllegalArgumentException("В ответе API нет fact: " + node);
-        }
-        JsonNode tempNode = factNode.get("temp");
-        if (tempNode == null || tempNode.isNull()) {
-            throw new IllegalArgumentException("В ответе API нет fact.temp: " + node);
-        }
+        System.out.printf("%s\n%d\n", "Вывод текущей температуры:", weatherResponseHandler.getCurrentTemp());
 
-        int temp = factNode.get("temp").asInt();
-
-        System.out.println("Вывод всего ответа сервиса:");
-        System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node));
-
-        System.out.println("Вывод текущей температуры:");
-        System.out.println(temp);
+        System.out.printf("%s (%d) дней:\n%.2f\n",
+                "Среднее арифметическое средних температур за",
+                LIMIT,
+                weatherResponseHandler.getForecastsAverageTemp());
     }
 }
