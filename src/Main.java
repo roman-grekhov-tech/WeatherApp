@@ -49,7 +49,10 @@ public class Main {
 
         int temp = factNode.get("temp").asInt();
 
+        System.out.println("Вывод всего ответа сервиса:");
         System.out.println(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node));
+
+        System.out.println("Вывод текущей температуры:");
         System.out.println(temp);
     }
 }
